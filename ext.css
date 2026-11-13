@@ -1,0 +1,170 @@
+/* Оформление новых разделов: викторина «Что мы помним?» и галерея «Лица памяти». Основной стиль сайта не меняется. */
+.modal.dk{background:#17160f;color:#e6dabb;border:1px solid #51402F;box-shadow:0 25px 70px #000d,0 0 0 1px #0008 inset}
+.modal.dk .mh{border-bottom:1px solid #51402F}.modal.dk .mh h2{color:#E0B46E;letter-spacing:.04em}
+.modal.dk .mb{background:radial-gradient(ellipse at 50% 0,#27231a 0,#17160f 70%);scrollbar-color:#8D2927 #17160f}
+.modal.dk .mf{border-top:1px solid #51402F;box-shadow:none;background:#14130d}
+.modal.dk .mf button:not(.sec){background:#8D2927;color:#fff}
+.modal.dk .mf button.sec{background:transparent;color:#cdbd96;border:1px solid #6b5b3c}
+.modal.dk a{color:#E0B46E}
+.modal.dk .mb p{max-width:none}
+
+/* ---------- викторина ---------- */
+.qz{max-width:52em;margin:0 auto;padding:.3em .4em .8em}
+.qth{display:flex;align-items:center;margin:.2em 0 1em}
+.qth i{flex:none;width:1.15em;height:1.15em;border-radius:50%;border:2px solid #6b5b3c;background:#1d1b14;font-style:normal;font-size:.62em;line-height:1;display:grid;place-items:center;color:#c0453f;transition:background .5s,border-color .5s,box-shadow .5s,transform .4s}
+.qth i.good{background:#8D2927;border-color:#c0453f;box-shadow:0 0 10px #8D2927aa}
+.qth i.bad{border-color:#8D2927;color:#e0877f}
+.qth i.cur{border-color:#E0B46E;box-shadow:0 0 0 3px #E0B46E33;animation:qp 1.8s infinite}
+@keyframes qp{50%{box-shadow:0 0 0 6px #E0B46E22}}
+.qth u{flex:1;height:3px;background:#3a3325;position:relative;min-width:6px;overflow:hidden}
+.qth u::after{content:"";position:absolute;inset:0;background:#8D2927;transform:scaleX(0);transform-origin:left;transition:transform .7s var(--ease,ease)}
+.qth u.d::after{transform:none}
+.qcard{background:linear-gradient(#e2d4b0,#d3c39b);color:#2a2018;border-radius:3px;padding:1em 1.3em 1.1em;box-shadow:0 14px 34px #000a,0 0 0 1px #8a7a52 inset;position:relative}
+.qcard::before{content:"";position:absolute;left:1.2em;top:-.55em;width:2.6em;height:1.1em;background:#b89a62;border-radius:2px;box-shadow:0 2px 4px #0006}
+.qin{animation:qin .55s var(--ease,ease)}
+@keyframes qin{from{opacity:0;transform:translateY(22px) rotate(-.9deg)}}
+.qn{font-size:.62em;letter-spacing:.18em;color:#8D2927;text-transform:uppercase;margin-bottom:.4em}
+.qq{margin:.1em 0 .8em;font-size:1.05em;line-height:1.35}
+.qo{display:grid;gap:.5em}
+.qb{display:flex;align-items:flex-start;gap:.7em;text-align:left;background:#efe3c2;color:#2a2018;border:1px solid #9a8a5e;border-radius:3px;padding:.55em .8em;font:inherit;font-size:.82em;line-height:1.35;cursor:pointer;transition:transform .2s,background .3s,border-color .3s,box-shadow .3s,opacity .4s}
+.qb:hover:not(:disabled){transform:translateX(5px);background:#f6ecd0;border-color:#8D2927;box-shadow:0 3px 10px #0004}
+.qb:focus-visible{outline:2px solid #E0B46E;outline-offset:2px}
+.qk{flex:none;width:1.5em;height:1.5em;border-radius:50%;border:1px solid #8a7a52;display:grid;place-items:center;font-size:.8em;color:#6b5b3c;margin-top:.05em}
+.qb:disabled{cursor:default}
+.qb.right{background:#cfe0b8;border-color:#4f7a3a;box-shadow:0 0 0 2px #4f7a3a55}.qb.right .qk{background:#4f7a3a;border-color:#4f7a3a;color:#fff}
+.qb.wrong{background:#ecc5bd;border-color:#8D2927;box-shadow:0 0 0 2px #8D292744;animation:qs .4s}.qb.wrong .qk{background:#8D2927;border-color:#8D2927;color:#fff}
+.qb.dim{opacity:.55}
+@keyframes qs{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.qx{margin-top:.8em;padding:.7em .9em;border-left:4px solid #8D2927;background:#00000012;font-size:.78em;line-height:1.5;animation:qx .5s var(--ease,ease)}
+@keyframes qx{from{opacity:0;transform:translateY(-8px)}}
+.qx b.qg{color:#2e5a2a}.qx b.qr{color:#8D2927}
+.qsrc{margin-top:.5em;font-size:.88em;color:#4a3f2a}.qcard a{color:#8D2927}
+.qhint{margin-top:.8em;font-size:.62em;color:#6b5b3c;text-align:right}
+.qhero{text-align:center;padding:1.4em .6em 1em}
+.qbig{font:700 5.4em/1 Georgia;color:#8D2927;text-shadow:0 0 28px #8D292788;animation:qf 3.2s ease-in-out infinite}
+@keyframes qf{50%{transform:translateY(-6px);opacity:.85}}
+.qlead{font-size:.95em;line-height:1.6;color:#e6dabb;max-width:34em;margin:.6em auto}
+.qsmall{font-size:.7em;color:#a8996f;letter-spacing:.14em;text-transform:uppercase}
+.qres{text-align:center;padding:.4em .4em 1em}
+.qscore{display:inline-flex;align-items:baseline;gap:.2em;animation:qin .7s var(--ease,ease)}
+.qscore span{font:700 4.6em/1 Georgia;color:#E0B46E;text-shadow:0 0 24px #E0B46E55}.qscore small{font-size:1.5em;color:#a8996f}
+.qsc{margin:.1em 0;font-size:.8em;color:#a8996f}
+.qres h4{margin:1.2em 0 .5em;color:#E0B46E;font-size:.9em;letter-spacing:.06em}
+.qmiss{list-style:none;margin:0 auto;padding:0;max-width:40em;text-align:left;display:grid;gap:.5em}
+.qmiss li{background:#00000030;border-left:3px solid #8D2927;padding:.5em .8em;font-size:.76em;line-height:1.45;animation:qin .5s var(--ease,ease) backwards}
+.qmiss li span{color:#a8c78c}
+.qhub{display:grid;gap:.6em;max-width:30em;margin:.6em auto}
+.qh{text-align:left;background:#00000030;border:1px solid #6b5b3c;color:#e6dabb;padding:.7em 1em;font:inherit;cursor:pointer;transition:border-color .3s,transform .2s}
+.qh:hover{border-color:#E0B46E;transform:translateX(4px)}.qh small{display:block;color:#a8996f;font-size:.7em}
+
+/* ---------- «Лица памяти» ---------- */
+.fz{max-width:64em;margin:0 auto;padding:.2em .3em .8em}
+.flead{font-size:.78em;color:#cdbd96;margin:.2em 0 .7em}
+.fbar{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;margin-bottom:.9em}
+.fbar input{flex:1 1 12em;min-width:10em;background:#0e0d09;color:#e6dabb;border:1px solid #6b5b3c;border-radius:3px;padding:.4em .7em;font:inherit;font-size:.78em}
+.fbar input:focus{outline:2px solid #E0B46E;outline-offset:1px}
+.fchips{display:flex;flex-wrap:wrap;gap:.35em}
+.fchip{background:transparent;color:#cdbd96;border:1px solid #6b5b3c;padding:.25em .8em;font:inherit;font-size:.72em;border-radius:99px;cursor:pointer;transition:background .25s,color .25s}
+.fchip.on,.fchip:hover{background:#8D2927;border-color:#8D2927;color:#fff}
+.fcnt{font-size:.68em;color:#a8996f;margin-left:auto;letter-spacing:.08em}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(11em,1fr));gap:1em}
+.fcard{display:flex;flex-direction:column;gap:.35em;text-align:center;background:linear-gradient(#e2d4b0,#cdbd96);color:#2a2018;border:0;border-radius:3px;padding:.6em .6em .8em;font:inherit;cursor:pointer;box-shadow:0 8px 20px #000a;animation:qin .55s var(--ease,ease) backwards;transition:transform .3s,box-shadow .3s,filter .3s;position:relative}
+.fcard:nth-child(odd){transform:rotate(-.7deg)}.fcard:nth-child(even){transform:rotate(.6deg)}
+.fcard.open:hover{transform:translateY(-5px) rotate(0);box-shadow:0 14px 28px #000c,0 0 0 2px #E0B46E,0 0 22px #E0B46E55}
+.fcard.open::after{content:"";position:absolute;inset:-2px;border-radius:4px;box-shadow:0 0 0 1px #E0B46E88;pointer-events:none;animation:fg 3s ease-out 1}
+@keyframes fg{from{box-shadow:0 0 0 1px #E0B46E,0 0 26px #E0B46E}}
+.fcard.lock{background:linear-gradient(#2a261d,#1d1b14);color:#8c7f5e;cursor:not-allowed;box-shadow:0 4px 12px #0008,0 0 0 1px #3a3325 inset}
+.ffr{display:grid;place-items:center;flex:0 0 7em;min-width:0;min-height:0;overflow:hidden;box-sizing:border-box;border:2px dashed #8a7a52;background:#0000001c;font-size:.7em}
+.fcard.lock .ffr{border-color:#4a4230;background:#0000002a}.ffr em{font-style:normal;letter-spacing:.14em;text-transform:uppercase;font-size:.9em;padding:0 .4em}
+.ffr img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;min-width:0;min-height:0;object-fit:cover}
+.fname{font-size:.82em;line-height:1.25}.fsub{font-size:.62em;color:#5a4d34;line-height:1.35}.fcard.lock .fsub{color:#8c7f5e}
+.fnone{grid-column:1/-1;text-align:center;color:#a8996f}
+.fd{display:grid;grid-template-columns:minmax(11em,15em) 1fr;gap:1.4em;max-width:58em;margin:.4em auto;padding:1.2em;background:linear-gradient(#e2d4b0,#d3c39b);color:#2a2018;border-radius:3px;box-shadow:0 18px 40px #000b}
+.fph{margin:0;align-self:start;min-width:0;max-width:100%;overflow:hidden}.fph img{display:block;width:100%;max-width:100%;max-height:24rem;box-sizing:border-box;object-fit:contain;border:6px solid #f3ead2;box-shadow:0 6px 16px #0007;cursor:zoom-in}
+.fnp{display:grid;place-items:center;min-height:11em;border:2px dashed #8a7a52;padding:.8em;font-size:.68em;line-height:1.45;text-align:center;color:#4a3f2a}
+.frole{font-size:.62em;letter-spacing:.2em;text-transform:uppercase;color:#8D2927}
+.ftx h3{margin:.1em 0 .4em;font-size:1.35em}
+.ftx dl{margin:0;font-size:.78em;line-height:1.5}.ftx dt{font-size:.82em;letter-spacing:.1em;text-transform:uppercase;color:#6b5b3c;margin-top:.7em}.ftx dd{margin:.1em 0 0}
+.ftx a{color:#8D2927}
+.ftx button{background:#8D2927;color:#fff;border:0;padding:.45em 1.1em;font:inherit;font-size:.78em;cursor:pointer;border-radius:2px;transition:filter .2s,transform .2s}.ftx button:hover{filter:brightness(1.2);transform:translateY(-2px)}
+@media (max-width:900px){.fd{grid-template-columns:1fr}}
+.modal.dk .qcard a,.modal.dk .fd a{color:#8D2927;text-decoration:underline}
+
+/* ======================= АДАПТИВНОСТЬ ======================= */
+html,body{overscroll-behavior:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+/* сцена и элементы интерфейса привязаны к границам сцены, а не окна (на широких и высоких окнах сцена по центру) */
+#dock{display:none}
+#side{display:none}
+#quest{left:calc(var(--sx,0px) + 2em);top:calc(var(--sy,0px) + 1.5em)}
+#hud{left:auto;right:calc(var(--sx,0px) + 7.5em);bottom:calc(var(--sy,0px) + 1.4em);font-size:1.25em;background:#0008;padding:.35em .9em;border-radius:3px;border-right:3px solid var(--red)}
+#lang{right:1.2em;top:.7em}
+#ab{right:calc(var(--sx,0px) + 1.2em);bottom:calc(var(--sy,0px) + 1em);opacity:.55;width:2.2em;height:2.2em}
+.modal{max-width:52em}.modal.wide{max-width:66em}
+@media (hover:none){#tip{display:none}.hot{transition:none}}
+.hot:focus-visible{outline:2px solid #E0B46E;outline-offset:3px}
+button:focus-visible{outline:2px solid #E0B46E;outline-offset:2px}
+#back{left:calc(var(--sx,0px) + 1em);right:auto}
+
+/* ---- общая подстройка модальных окон на узких экранах ---- */
+[data-mode=pp] .ov,[data-mode=pl] .ov{padding-top:34px}
+[data-mode=pp] .modal,[data-mode=pl] .modal{max-width:none}
+[data-mode=pp] .two{flex-direction:column}
+[data-mode=pp] .modal,[data-mode=pp] .modal.wide{width:100%;font-size:1.5em;border-radius:12px 12px 0 0;margin-top:auto}
+[data-mode=pp] .modal.wide{height:calc(100% - 2px)}
+[data-mode=pp] .mh{padding:.6em .8em .4em}[data-mode=pp] .mb{padding:.7em .8em}[data-mode=pp] .mf{padding:.5em .6em;gap:.4em}
+[data-mode=pp] .mf button,[data-mode=pp] .modal.wide .mf button{font-size:.95em;padding:.55em .9em;letter-spacing:.04em}
+[data-mode=pp] .x{width:2.4em;height:2.4em}
+[data-mode=pp] .chip{padding:.5em .85em}
+[data-mode=pp] .fold{flex-direction:column;width:90%;max-height:100%;overflow:auto;gap:1.4em;padding:1.2em .2em .8em}
+[data-mode=pp] .fold>div{flex:none;font-size:1.15em}
+[data-mode=pp] .drx{right:0;top:-2.5em}
+[data-mode=pp] .mp,[data-mode=pp] .mrow{flex-direction:column}
+[data-mode=pp] .mw{flex:0 0 48%}[data-mode=pp] .as,[data-mode=pp] .modal.wide .as{width:100%;flex:1;min-height:9em}
+[data-mode=pp] .bd{min-width:60em;min-height:27em}
+[data-mode=pp] .tk{flex:1 0 6em}
+[data-mode=pp] #fc{max-width:88%}[data-mode=pp] .sc .k{font-size:2.4em}[data-mode=pp] .sc .t{font-size:1.7em}
+[data-mode=pp] #ic{flex-direction:column;gap:0;font-size:1.15em}[data-mode=pp] #ic u{flex:none;width:3px;height:14px;min-width:0}
+[data-mode=pp] #intro h1{font-size:5.6em}[data-mode=pp] #intro p{font-size:1.5em;padding:0 1em}[data-mode=pp] #intro p[style]{font-size:1.9em!important}
+[data-mode=pp] #lb img,[data-mode=pp] #lbi{max-width:100%}
+
+/* ---- телефон, портрет: сцена-«шапка» сверху, под ней подсказка и крупные кнопки разделов ---- */
+[data-mode=pp] svg#room,[data-mode=pp] #dark,[data-mode=pp] #dust{top:0!important;left:0!important;bottom:auto!important;height:var(--sh)!important;width:100%!important}
+[data-mode=pp] #stage{background:#15160f}
+[data-mode=pp] #side{display:flex;flex-direction:column;gap:10px;position:absolute;left:0;right:0;top:var(--sh);bottom:0;padding:12px 12px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(#1c1b14,#12130d);border-top:2px solid var(--amber);overflow:auto;z-index:5}
+[data-mode=pp] #quest{position:static;max-width:none;font-size:14px;margin-right:0;padding:.6em .8em}
+[data-mode=pp] #hud{position:static;font-size:12.5px;background:none;padding:0 2px;border:0;order:3}
+[data-mode=pp] #dock{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(60px,84px);gap:10px;order:4;margin-top:auto}
+[data-mode=pp] #lang{top:6px;right:6px}[data-mode=pp] #lang button{font-size:11px;padding:.35em .7em}
+[data-mode=pp] #ab{top:calc(var(--sh) + 8px);bottom:auto;right:10px;width:30px;height:30px;font-size:14px;opacity:.7;z-index:6}
+[data-mode=pp] #quest{margin-right:34px}
+[data-mode=pp] #dock button,[data-mode=pl] #dock button{display:flex;align-items:center;gap:10px;background:#26231a;color:#E0B46E;border:1px solid #6b5b3c;border-left:3px solid var(--red);padding:12px 10px;font-size:12.5px;letter-spacing:.06em;text-align:left;min-height:54px;transition:background .2s,transform .15s}
+[data-mode=pp] #dock button:active{transform:scale(.97);background:#3a3427}
+#dock svg{width:26px;height:26px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+[data-mode=pp] #tip{display:none}
+
+/* ---- телефон, ландшафт: сцена слева, колонка значков справа ---- */
+[data-mode=pl] svg#room,[data-mode=pl] #dark,[data-mode=pl] #dust{left:0!important;right:var(--dw)!important;width:auto!important}
+[data-mode=pl] #side{display:flex;flex-direction:column;position:absolute;right:0;top:0;bottom:0;width:var(--dw);background:#14150e;border-left:2px solid var(--amber);padding:calc(34px) 6px 6px;z-index:5;overflow:auto}
+[data-mode=pl] #dock{display:flex;flex-direction:column;gap:6px;width:100%}
+[data-mode=pl] #dock button{padding:6px 0;justify-content:center;min-height:42px;border-left-width:1px}
+[data-mode=pl] #dock button span{display:none}
+[data-mode=pl] #dock svg{width:24px;height:24px}
+[data-mode=pl] #quest{max-width:42%;font-size:10px;padding:.4em .7em}[data-mode=pl] #quest small{font-size:8px}
+[data-mode=pl] #hud{font-size:10px;bottom:6px;right:calc(var(--dw) + 40px)}
+[data-mode=pl] #lang{right:6px;top:4px;z-index:46}[data-mode=pl] #lang button{font-size:10px;padding:.25em .5em}
+[data-mode=pl] #ab{right:calc(var(--dw) + 6px);bottom:4px;width:24px;height:24px;font-size:12px}
+[data-mode=pl] .modal.wide{width:calc(100% - 8px)}
+[data-mode=pl] .mh{padding:.25em .8em}[data-mode=pl] .mh h2{font-size:1.1em}[data-mode=pl] .modal{font-size:1.5em}
+[data-mode=pl] .mf{padding:.2em .6em}[data-mode=pl] .mf button{font-size:.85em;padding:.25em .8em}
+[data-mode=pl] #intro h1{font-size:4em}[data-mode=pl] #intro p{font-size:1.4em}[data-mode=pl] #intro p[style]{font-size:1.6em!important}[data-mode=pl] #ic{display:none}
+[data-mode=pl] .fold{gap:1em}[data-mode=pl] .fold>div{font-size:1.1em}
+/* доска «Нить памяти» на узком экране: вертикальный список с красной нитью слева */
+[data-mode=pp] .bd{min-width:0;min-height:0;height:auto;display:block;padding:.2em 0 .6em}
+[data-mode=pp] .bd svg{display:none}
+[data-mode=pp] .bd .rl{position:static;display:block;margin:1.1em 0 .4em;font-size:.8em}
+[data-mode=pp] .bd .bc{position:static!important;width:auto;height:auto;min-height:3.2em;margin:.35em 0 .35em .9em;font-size:.72em;opacity:1;transform:none;border-left:4px solid #8D2927}
+[data-mode=pp] .bd .bc.gh{border-left:4px dashed #8a7a52}
+[data-mode=pp] .mf button{white-space:nowrap}
+[data-mode=pp] .mf button,[data-mode=pp] .modal.wide .mf button{font-size:.78em;padding:.5em .7em;letter-spacing:.02em}
+[data-mode=pl] .mf button{white-space:nowrap}
+[data-mode=pl] .bd{min-height:15em}

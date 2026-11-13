@@ -1,20 +1,21 @@
 (function(){
 function starP(x,y,r){var p=[];for(var i=0;i<10;i++){var R=i%2?r*.45:r,t=-Math.PI/2+i*Math.PI/5;p.push((x+R*Math.cos(t)).toFixed(1)+','+(y+R*Math.sin(t)).toFixed(1))}return 'M'+p.join(' L')+'Z'}
 var $=function(s){return document.querySelector(s)},NS='http://www.w3.org/2000/svg',B=window.BELARUS,C=window.CASES,SRC=window.SRC;
-var KEY='sled5',st={done:{},desk:[],stage:{},seen:{}},seq=0,zt=0,fromBoard=false,drag=null,moved=false,busy=false,view='room',cur=null,modalOpen=false,mapVB=null;
+var KEY='sled5',st={done:{},desk:[],stage:{},seen:{},reach:{},mapOpened:false},seq=0,zt=0,fromBoard=false,drag=null,PT={},pinch=null,moved=false,busy=false,view='room',cur=null,modalOpen=false,mapVB=null;
 try{localStorage.removeItem('sled3');localStorage.removeItem('sled4');localStorage.removeItem(KEY)}catch(e){}
 function save(){}
 var RM=matchMedia('(prefers-reduced-motion:reduce)').matches;function setRM(){document.documentElement.classList.toggle('rm',RM)}
 setRM();
 function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function OD(d){var m=/^Весна (\d{4})$/.exec(d);return m?'весной '+m[1]:'на '+d}
 var CN={slutsk:'Слуцк',novogrudok:'Новогрудок',minsk:'Минск'};
 // ---- помещение
 var r=7;function rnd(){r=(r*9301+49297)%233280;return r/233280}
 var sh=$('#shelves'),cols=['#6b5a3e','#4d5238','#8a7650','#3f3a2c','#a08c62','#5a4632'];
 for(var row=0;row<4;row++){var y=85+row*100;el('rect',{x:300,y:y+88,width:640,height:10,fill:'#51402F'},sh);var x=306;while(x<930){var w=8+rnd()*14,h=58+rnd()*26;el('rect',{x:x,y:y+88-h,width:w,height:h,fill:cols[Math.floor(rnd()*6)],stroke:'#1c1610','stroke-width':1},sh);if(rnd()<.4)el('rect',{x:x+1,y:y+88-h+10,width:w-2,height:9,fill:'#D7C8A7',opacity:.75},sh);x+=w+1.5}}
-var fl=$('#floor');for(var i=0;i<14;i++)el('line',{x1:i*130-40,y1:900,x2:i*100+300,y2:760},fl);
+var fl=$('#floor');for(var i=-16;i<34;i++)el('line',{x1:i*130-40,y1:2100,x2:i*100+300,y2:760},fl);
 var wt=$('#wallt');for(var i=0;i<40;i++)el('rect',{x:rnd()*1600,y:rnd()*760,width:2+rnd()*60,height:1.5,fill:'#000'},wt);
-var cd=$('#cabd'),dn=['СЛУЦК','НОВОГРУДОК','МИНСК'];for(var i=0;i<3;i++){var g=el('g',{class:'dw'},cd);el('rect',{x:60,y:330+i*140,width:220,height:120,fill:'#7a6044',stroke:'#2a2018','stroke-width':3},g);el('rect',{x:78,y:362+i*140,width:184,height:30,fill:'#c9a14a',stroke:'#2a2018','stroke-width':2},g);var t=el('text',{x:170,y:383+i*140,'text-anchor':'middle','font-size':14,'font-weight':700,fill:'#2a2018'},g);t.textContent=dn[i];el('circle',{cx:170,cy:425+i*140,r:7,fill:'#E0B46E'},g)}
+var cd=$('#cabd'),dn=['СЛУЦК','НОВОГРУДОК','МИНСК'];for(var i=0;i<3;i++){var g=el('g',{class:'dw'},cd);el('rect',{x:60,y:330+i*140,width:220,height:120,fill:'#7a6044',stroke:'#2a2018','stroke-width':3},g);el('rect',{x:78,y:362+i*140,width:184,height:30,fill:'#c9a14a',stroke:'#2a2018','stroke-width':2},g);var t=el('text',{x:170,y:383+i*140,'text-anchor':'middle','font-size':14,'font-weight':700,fill:'#2a2018'},g);t.textContent=dn[i];el('rect',{x:66,y:336+i*140,width:208,height:108,fill:'none',stroke:'#a07f58','stroke-width':1.5,opacity:.55},g);el('rect',{x:136,y:418+i*140,width:68,height:11,rx:5.5,fill:'#8a6a2a',stroke:'#2a2018','stroke-width':1.5},g);el('rect',{x:140,y:420+i*140,width:60,height:5,rx:2.5,fill:'#E0B46E'},g)}
 // мини-карта на стене
 var mg=$('#mapg');el('path',{d:B.d,fill:'#a99a72',stroke:'#4a3d28','stroke-width':3},mg);el('path',{d:B.rivers,fill:'none',stroke:'#6f8f90','stroke-width':1.5,'clip-path':'none',opacity:.6},mg);
 for(var k in B.o)el('circle',{cx:B.o[k][0],cy:B.o[k][1],r:12,fill:'#8D2927'},mg);
@@ -39,6 +40,8 @@ hot('cab',function(){cam('cab',function(){fillFold();ov('#drawer',true)})});
 hot('map',function(){cam('map',function(){showMap()})});
 hot('board',function(){cam('board',function(){showBoard()})});
 hot('note',function(){showLog()});
+hot('quiz',function(){if(window.QUIZ)window.QUIZ.open()});
+hot('faces',function(){if(window.FACES)window.FACES.open()});
 // ---- закрытие: ✕, фон, Esc
 function closeLb(){var l=$('#lb');l.classList.remove('show','z');setTimeout(function(){if(!l.classList.contains('show'))l.style.display='none'},RM?0:350)}
 document.addEventListener('click',function(e){var t=e.target;if(t.matches&&t.matches('figure img')){var l=$('#lb');var li=$('#lbi');li.onerror=function(){li.onerror=null;li.src=t.src};li.src=t.dataset.full||t.src;l.style.display='flex';requestAnimationFrame(function(){requestAnimationFrame(function(){l.classList.add('show')})})}});
@@ -91,7 +94,7 @@ function openCase(c){cur=c;st.stage[c.id]=Math.min(st.stage[c.id]||0,4);render()
 function fig(f,cap){return '<figure><img src="img/'+f+'.jpg" data-full="img/'+f+'-full.jpg" onerror="this.onerror=null;this.src=\'img/placeholder.jpg\'" title="Нажмите, чтобы увеличить" alt=""><figcaption>'+cap+'</figcaption></figure>'}
 function ph(c,im){return '<div class="gal">'+im.f.map(function(f,k){return fig(f,im.c[k])}).join('')+'</div>'}
 function chain(c,s){return '<div class="ch">'+c.chain.map(function(n,i){return (i?'<u class="'+(i<=s?'d':'')+'"></u>':'')+'<span class="'+(i<=s?'d':'')+'">'+n+'</span>'}).join('')+'</div>'}
-function render(){if(!cur)return;var c=cur,s=Math.max(0,Math.min(4,st.stage[c.id]|0)),S;st.stage[c.id]=s;S=c.stages[s],h='<div class="sheet"><p>'+S.lead+'</p>';
+function render(){if(!cur)return;var c=cur,s=Math.max(0,Math.min(4,st.stage[c.id]|0)),S;st.stage[c.id]=s;st.reach=st.reach||{};st.reach[c.id]=Math.max(st.reach[c.id]===undefined?-1:st.reach[c.id],s);S=c.stages[s],h='<div class="sheet"><p>'+S.lead+'</p>';
  var list='<p><b>Нажмите на лист, чтобы прочитать и открыть источник:</b></p>'+S.items.map(function(f,i){return '<span class="chip" data-f="'+i+'">'+f[0]+'</span>'}).join('')+'<div id="det"></div>';
  h+=S.img?'<div class="two">'+ph(c,S.img)+'<div>'+list+'</div></div>':list;if(s===1)h+=routeMap(c);
  if(s===0)h+='<p><button class="sec" id="tomap">ПОКАЗАТЬ НА КАРТЕ</button> <button class="sec" id="rf">▶ СЮЖЕТНАЯ ВСТАВКА</button></p>';
@@ -104,7 +107,7 @@ function render(){if(!cur)return;var c=cur,s=Math.max(0,Math.min(4,st.stage[c.id
 function finish(c){fromBoard=false;st.done[c.id]=1;save();modalOpen=false;ov('#panel',false);busy=false;lock(function(){cam('board',function(){showBoard()})})}
 // ---- карта
 function proj(c){return B.cities[c]}
-function showMap(focus){var K=B.k*Math.cos(53.7*Math.PI/180),P=function(lo,la){return [Math.round((lo-23)*K),Math.round((56.3-la)*B.k)]},TL=window.TL,PLs=window.PL,cur=0,sel=null,
+function showMap(focus,pre){st.mapOpened=true;var K=B.k*Math.cos(53.7*Math.PI/180),P=function(lo,la){return [Math.round((lo-23)*K),Math.round((56.3-la)*B.k)]},TL=window.TL,PLs=window.PL,cur=0,sel=null,
  MAJ=/^(Минск|Брест|Гродно|Витебск|Гомель|Могилёв|Слуцк|Новогрудок|Киев)$/,
  ix=function(id){for(var i=0;i<TL.length;i++)if(TL[i].id===id)return i;return -1},
  FL='M0,-15C7,-7 9,-1 5,6C3,10 -3,10 -5,6C-9,-1 -3,-7 0,-15Z',
@@ -121,7 +124,7 @@ function showMap(focus){var K=B.k*Math.cos(53.7*Math.PI/180),P=function(lo,la){r
  function st8(p){var i=cur;if(p.ty==='b'){var a2=ix(p.from),b2=ix(p.to);return i<a2?'before':i<=b2?'on':'after'}if(p.ty==='v')return i>=ix(p.at)?'gone':'alive';if(p.ty==='f')return i<=1?'on':'after';var a=ix(p.from),b=ix(p.to);return i<a?'before':i<b?'on':i===b&&p.ty==='g'?'on':'gone'}
  function cst(c){var d=TL[cur].iso;return d<c[3]?'до оккупации':d>=c[4]?'освобождён':'оккупирован'}
  function legend(){var cs=window.CITY,g=function(s){return cs.filter(function(c){return cst(c)===s}).map(function(c){return c[0]}).join(', ')||'—'};
-  $('#lgb').innerHTML='<b>Легенда</b><p><i class="sw" style="background:#33281d"></i>зона Третьего рейха и оккупированные земли</p><p><i class="sw" style="background:#b6a368"></i>зона СССР</p><p><i class="sw" style="background:#7b7a5a"></i>союзники рейха (Румыния до 23.08.1944, Венгрия, Финляндия, Словакия)</p><p><i class="sw" style="background:none;border-top:3px dashed #8D2927;height:0"></i>линия фронта (приблизительно)</p><p>🔥 бои (номер — в списке справа)</p><p><b>⟶</b> чёрная стрелка — наступление Третьего рейха; <b style="color:#c0261c">⟶</b> красная — наступление СССР (освобождение)</p><p>● красная точка — деревня; ⊗ тёмная с крестом — уничтожена</p><p>◆ лагерь · ■ гетто · ⬢ крепость</p><p>★ столица государства (республики)</p><b>Города на '+TL[cur].d+'</b><p><b>Под оккупацией:</b> '+g('оккупирован')+'</p><p><b>Освобождены:</b> '+g('освобождён')+'</p><p><b>Ещё не заняты:</b> '+g('до оккупации')+'</p>'}
+  $('#lgb').innerHTML='<b>Легенда</b><p><i class="sw" style="background:#33281d"></i>зона Третьего рейха и оккупированные земли</p><p><i class="sw" style="background:#b6a368"></i>зона СССР</p><p><i class="sw" style="background:#7b7a5a"></i>союзники рейха (Румыния до 23.08.1944, Венгрия, Финляндия, Словакия)</p><p><i class="sw" style="background:none;border-top:3px dashed #8D2927;height:0"></i>линия фронта (приблизительно)</p><p>🔥 бои (номер — в списке справа)</p><p><b>⟶</b> чёрная стрелка — наступление Третьего рейха; <b style="color:#c0261c">⟶</b> красная — наступление СССР (освобождение)</p><p>● красная точка — деревня; ⊗ тёмная с крестом — уничтожена</p><p>◆ лагерь · ■ гетто · ⬢ крепость</p><p>★ столица государства (республики)</p><b>Города '+OD(TL[cur].d)+'</b><p><b>Под оккупацией:</b> '+g('оккупирован')+'</p><p><b>Освобождены:</b> '+g('освобождён')+'</p><p><b>Ещё не заняты:</b> '+g('до оккупации')+'</p>'}
  function draw(){if(!$('#ovl')||!$('#dyn')||!$('#as'))return;var T=TL[cur],pts=T.front.map(function(q){return P(q[0],q[1])}),f=pts[0],l=pts[pts.length-1],ln=pts.map(function(q){return q.join(',')}).join(' L'),rom=T.iso>='1944-08-23',
   pr='L'+ln+' L'+l[0]+',2900 ';
   $('#ovl').innerHTML='<clipPath id="cR"><path d="M-2600,-1700 L'+f[0]+',-1700 '+pr+'L-2600,2900Z"/></clipPath><clipPath id="cS"><path d="M3600,-1700 L'+f[0]+',-1700 '+pr+'L3600,2900Z"/></clipPath><g clip-path="url(#cR)"><use href="#landp" fill="#33281d" fill-opacity=".68"/></g><g clip-path="url(#cS)"><use href="#landp" fill="#c9b574" fill-opacity=".55"/></g>';
@@ -145,8 +148,8 @@ function showMap(focus){var K=B.k*Math.cos(53.7*Math.PI/180),P=function(lo,la){r
   if(!sel)$('#as').innerHTML='<h3>'+T.d+' — '+T.title+'</h3><p>'+T.text+'</p>'+(T.ph?fig(T.ph[0],T.ph[1]):'')+(T.battles.length?'<b>Бои и сражения:</b><ol>'+T.battles.map(function(b){var B2=window.BT[b];return '<li><b>'+B2.n+'</b> ('+B2.w+'): '+B2.t+' <a href="'+window.WIKI(B2.wk)+'" target="_blank" rel="noopener">Википедия</a></li>'}).join('')+'</ol>':'')+(on.length?'<p><b>Уничтожены (крестик):</b> '+on.join(', ')+'.</p>':'')+'<p><small>Красная пунктирная линия — приблизительный ход фронта. Нажмите на значок, город или огонь, чтобы узнать подробности. Колесо мыши — масштаб, перетаскивание — сдвиг. Подписи мелких объектов появляются при приближении.</small></p>'}
  function info(html){if(!$('#as'))return;$('#as').innerHTML=html+'<p><button class="sec" id="bk">← К дате</button></p>';$('#bk').onclick=function(){sel=null;draw()}}
  function obj(id){var p=PLs.filter(function(x){return x.id===id})[0],s=st8(p),tn={v:'Деревня',c:'Лагерь',g:'Гетто',f:'Крепость',b:'Город'}[p.ty];sel=id;draw();var t=s==='gone'?(p.gone||p.after):s==='on'?(p.on||p.alive):s==='after'?(p.after||''):(p.alive||p.before||'');
-  info('<h3>'+(s==='gone'&&p.ty==='v'?'✝ ':'')+p.n+'</h3><p><i>'+tn+' · на '+TL[cur].d+': '+({alive:'существует',gone:p.ty==='v'?'уничтожена':'прекратило существование',on:p.ty==='f'||p.ty==='b'?'бои':'действует',after:p.ty==='b'?'после битвы':'после боёв',before:'в тылу'}[s]||'')+'</i></p><p>'+t+'</p>'+(p.ph?fig(p.ph,p.phc):'')+(p.approx?'<p><small>Положение на карте приблизительное.</small></p>':'')+'<p>Источники: '+(p.src?links(p.src):'<a href="'+window.WIKI(p.wk)+'" target="_blank" rel="noopener">Википедия</a>')+'</p>')}
- function city(i){var c=window.CITY[i],cs=C.filter(function(x){return CN[x.map]===c[0]})[0];sel=null;draw();info('<h3>'+c[0]+'</h3><p>'+c[5]+'</p><p>На '+TL[cur].d+': <b>'+cst(c)+'</b>.</p><p>Оккупация: '+c[3].split('-').reverse().join('.')+'; освобождение: '+c[4].split('-').reverse().join('.')+'.</p>'+(c[6]?fig(c[6],c[7]):'')+'<p><a href="'+window.WIKI(c[0])+'" target="_blank" rel="noopener">Википедия: '+c[0]+'</a></p>'+(cs?'<p><button id="oc">ОТКРЫТЬ ДЕЛО →</button></p>':''));if(cs)$('#oc').onclick=function(){pull(cs)};var q=P(c[1],c[2]);if($('#msv'))zoom(q[0]-190,q[1]-150,380,300)}
+  info('<h3>'+(s==='gone'&&p.ty==='v'?'✝ ':'')+p.n+'</h3><p><i>'+tn+' · '+OD(TL[cur].d)+': '+({alive:'существует',gone:p.ty==='v'?'уничтожена':'прекратило существование',on:p.ty==='f'||p.ty==='b'?'бои':'действует',after:p.ty==='b'?'после битвы':'после боёв',before:'в тылу'}[s]||'')+'</i></p><p>'+t+'</p>'+(p.ph?fig(p.ph,p.phc):'')+(p.approx?'<p><small>Положение на карте приблизительное.</small></p>':'')+'<p>Источники: '+(p.src?links(p.src):'<a href="'+window.WIKI(p.wk)+'" target="_blank" rel="noopener">Википедия</a>')+'</p>')}
+ function city(i){var c=window.CITY[i],cs=C.filter(function(x){return CN[x.map]===c[0]})[0];sel=null;draw();info('<h3>'+c[0]+'</h3><p>'+c[5]+'</p><p>'+(/^\d/.test(TL[cur].d)?'На '+TL[cur].d+':':'Весной '+TL[cur].d.slice(-4)+':')+' <b>'+cst(c)+'</b>.</p><p>Оккупация: '+c[3].split('-').reverse().join('.')+'; освобождение: '+c[4].split('-').reverse().join('.')+'.</p>'+(c[6]?fig(c[6],c[7]):'')+'<p><a href="'+window.WIKI(c[0])+'" target="_blank" rel="noopener">Википедия: '+c[0]+'</a></p>'+(cs?'<p><button id="oc">ОТКРЫТЬ ДЕЛО →</button></p>':''));if(cs)$('#oc').onclick=function(){pull(cs)};var q=P(c[1],c[2]);if($('#msv'))zoom(q[0]-190,q[1]-150,380,300)}
  function cap(i){var c=window.CAP[i];sel=null;draw();info('<h3>★ '+c[0]+'</h3><p>'+c[3]+'</p><p><a href="'+window.WIKI(c[0])+'" target="_blank" rel="noopener">Википедия: '+c[0]+'</a></p>')}
  function bat(id){var B2=window.BT[id];sel=null;info('<h3>'+B2.n+'</h3><p>'+B2.w+'</p><p>'+B2.t+'</p><p><a href="'+window.WIKI(B2.wk)+'" target="_blank" rel="noopener">Википедия</a></p>')}
  function set(i){cur=Math.max(0,Math.min(TL.length-1,i));sel=null;draw()}
@@ -154,14 +157,14 @@ function showMap(focus){var K=B.k*Math.cos(53.7*Math.PI/180),P=function(lo,la){r
  [].forEach.call(document.querySelectorAll('.tk'),function(n){n.onclick=function(){set(+n.dataset.i)}});$('#tlp').onclick=function(){set(cur-1)};$('#tln').onclick=function(){set(cur+1)};
  $('#lgt').onclick=function(){var l=$('#lg');l.classList.toggle('op');$('#lgt').textContent=l.classList.contains('op')?'Легенда ◀':'Легенда ▶'};
  $('#zi').onclick=function(){var v=mapVB;zoom(v[0]+v[2]*.2,v[1]+v[3]*.2,v[2]*.6,v[3]*.6)};$('#zo').onclick=function(){zoom(-1440,-420,3200,2040)};$('#zh').onclick=function(){zoom(-800,-340,2080,1325)};
- var f0=focus==='minsk'?'nov41':focus==='slutsk'?'oct41':focus==='novogrudok'?'sep43':null;set(f0?ix(f0):0);
+ var f0=focus==='minsk'?'nov41':focus==='slutsk'?'oct41':focus==='novogrudok'?'sep43':null;set(f0?ix(f0):0);if(pre){if(pre.date)set(ix(pre.date));if(pre.obj)setTimeout(function(){try{obj(pre.obj)}catch(e){}},RM?0:500)}
  if(focus){var nm={slutsk:'Слуцк',novogrudok:'Новогрудок',minsk:'Минск'}[focus];setTimeout(function(){for(var i=0;i<window.CITY.length;i++)if(window.CITY[i][0]===nm){city(i);break}},400)}}
 
 function setVB(v){v[0]=Math.max(-1500,Math.min(1800-v[2],v[0]));v[1]=Math.max(-800,Math.min(1960-v[3],v[1]));mapVB=v;var s=$('#msv');if(s){s.setAttribute('viewBox',v.join(' '));s.classList.toggle('zin',v[2]<1100)}}
 function pt(sv,e){try{var p=sv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(sv.getScreenCTM().inverse())}catch(x){return{x:mapVB[0]+mapVB[2]/2,y:mapVB[1]+mapVB[3]/2}}}
-function wireMap(sv){sv.addEventListener('wheel',function(e){e.preventDefault();zt++;var v=mapVB,f=e.deltaY<0?.85:1/.85,w=Math.min(3300,Math.max(110,v[2]*f)),k=w/v[2],p=pt(sv,e);setVB([p.x-(p.x-v[0])*k,p.y-(p.y-v[1])*k,w,v[3]*k])},{passive:false});sv.addEventListener('pointerdown',function(e){var m=sv.getScreenCTM?sv.getScreenCTM():null;drag={x:e.clientX,y:e.clientY,v:mapVB.slice(),a:m&&m.a?m.a:1};moved=false});sv.style.cursor='grab'}
-document.addEventListener('pointermove',function(e){if(!drag)return;var dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>5){var s=$('#msv');if(!s){drag=null;return}moved=true;zt++;s.style.cursor='grabbing';setVB([drag.v[0]-dx/drag.a,drag.v[1]-dy/drag.a,drag.v[2],drag.v[3]])}});
-document.addEventListener('pointerup',function(){drag=null;var s=$('#msv');if(s)s.style.cursor='grab';setTimeout(function(){moved=false},0)});
+function wireMap(sv){sv.addEventListener('wheel',function(e){e.preventDefault();zt++;var v=mapVB,f=e.deltaY<0?.85:1/.85,w=Math.min(3300,Math.max(110,v[2]*f)),k=w/v[2],p=pt(sv,e);setVB([p.x-(p.x-v[0])*k,p.y-(p.y-v[1])*k,w,v[3]*k])},{passive:false});sv.addEventListener('pointerdown',function(e){PT[e.pointerId]={x:e.clientX,y:e.clientY};pinch=null;var m=sv.getScreenCTM?sv.getScreenCTM():null;drag={x:e.clientX,y:e.clientY,v:mapVB.slice(),a:m&&m.a?m.a:1};moved=false});sv.style.cursor='grab'}
+document.addEventListener('pointermove',function(e){if(PT[e.pointerId]){PT[e.pointerId].x=e.clientX;PT[e.pointerId].y=e.clientY}var ks=Object.keys(PT);if(ks.length>=2){var sv2=$('#msv');if(!sv2)return;var a=PT[ks[0]],b=PT[ks[1]],dd=Math.hypot(a.x-b.x,a.y-b.y),mx=(a.x+b.x)/2,my=(a.y+b.y)/2;if(!pinch){pinch={d:dd,v:mapVB.slice(),c:pt(sv2,{clientX:mx,clientY:my})}}else if(pinch.d>0){var k=Math.max(110/pinch.v[2],Math.min(3300/pinch.v[2],pinch.d/dd)),w=pinch.v[2]*k,c=pinch.c;moved=true;zt++;drag=null;setVB([c.x-(c.x-pinch.v[0])*k,c.y-(c.y-pinch.v[1])*k,w,pinch.v[3]*k])}return}if(!drag)return;var dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>5){var s=$('#msv');if(!s){drag=null;return}moved=true;zt++;s.style.cursor='grabbing';setVB([drag.v[0]-dx/drag.a,drag.v[1]-dy/drag.a,drag.v[2],drag.v[3]])}});
+function pend(e){delete PT[e.pointerId];pinch=null}document.addEventListener('pointercancel',pend);document.addEventListener('pointerup',function(e){pend(e);drag=null;var s=$('#msv');if(s)s.style.cursor='grab';setTimeout(function(){moved=false},0)});
 function zoom(x,y,w,h){var my=++zt,v=mapVB.slice(),t0=performance.now(),sv=$('#msv'),d=RM?1:700;function f(t){if(my!==zt)return;var k=Math.min(1,(t-t0)/d);k=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;mapVB=[0,1,2,3].map(function(i){return v[i]+([x,y,w,h][i]-v[i])*k});if(sv){sv.setAttribute('viewBox',mapVB.join(' '));sv.classList.toggle('zin',mapVB[2]<1100)}if(k<1)requestAnimationFrame(f)}requestAnimationFrame(f)}
 // ---- нить памяти
 function showBoard(){var all=Object.keys(st.done).length===3,h='<div class="bd"><svg viewBox="0 0 100 100" preserveAspectRatio="none">',cards='',d=0;
@@ -174,7 +177,7 @@ function showBoard(){var all=Object.keys(st.done).length===3,h='<div class="bd">
  [].forEach.call(document.querySelectorAll('.bc[data-c]'),function(n){n.onclick=function(){fromBoard=true;cur=byId(n.dataset.c);st.stage[cur.id]=+n.dataset.j;save();render()}})}
 // ---- журнал
 function showLog(){modal('Журнал исследователя','',C.map(function(c){return '<p><b>'+c.short+'</b> — '+(st.done[c.id]?'исследовано. Источники: '+links(c.src):'не исследовано')+(st.desk.indexOf(c.id)>=0?' <a href="#" data-o="'+c.id+'">открыть папку</a>':'')+'</p>'}).join(''),'<button class="sec" id="rs">Сбросить прогресс</button><button class="sec" id="cl">✕ ЗАКРЫТЬ</button>');
- $('#cl').onclick=closeAll;$('#rs').onclick=function(){if(confirm(window.T?window.T('Сбросить весь прогресс?'):'Сбросить весь прогресс?')){st={done:{},desk:[],stage:{},seen:{}};save();deskDraw();closeAll()}};
+ $('#cl').onclick=closeAll;$('#rs').onclick=function(){if(confirm(window.T?window.T('Сбросить весь прогресс?'):'Сбросить весь прогресс?')){st={done:{},desk:[],stage:{},seen:{},reach:{},mapOpened:false};save();deskDraw();closeAll()}};
  [].forEach.call(document.querySelectorAll('[data-o]'),function(a){a.onclick=function(e){e.preventDefault();pull(byId(a.dataset.o))}})}
 // ---- пыль и вступление
 var cv=$('#dust'),cx=cv.getContext('2d'),P=[];function rs(){cv.width=cv.clientWidth;cv.height=cv.clientHeight}rs();addEventListener('resize',rs);
@@ -183,5 +186,9 @@ for(var i=0;i<50;i++)P.push({x:Math.random(),y:Math.random(),v:.00004+Math.rando
 var it=$('#intro');function enter(){it.style.opacity=0;it.style.pointerEvents='none';setTimeout(function(){it.style.display='none'},1200)}
 setTimeout(function(){it.classList.add('dim')},500);setTimeout(function(){it.classList.add('on')},1300);$('#enter').onclick=enter;$('#skip').onclick=enter;
 $('#ab').onclick=function(){if(modalOpen)return;modal('О проекте «СЛЕД»','',window.ABOUT,'<span></span><button class="sec" id="cl">✕ ЗАКРЫТЬ</button>');$('#cl').onclick=closeAll};
+function openStage(id,s){var c=byId(id);if(!c)return;fromBoard=false;cur=c;if(st.desk.indexOf(id)<0){st.desk.push(id);save();deskDraw()}st.stage[id]=s;render()}
+function openMap(pre){closeAll();setTimeout(function(){lock(function(){cam('map',function(){showMap(null,pre)})})},RM?0:120)}
+window.SLED={$:$,modal:modal,close:closeAll,openStage:openStage,openMap:openMap};
+Object.defineProperty(window.SLED,'st',{get:function(){return st}});
 deskDraw();quest();
 })();
